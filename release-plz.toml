@@ -1,26 +1,15 @@
 [workspace]
 # Configure release-plz to work with cargo-dist
 
-# Path to the changelog file
-changelog_path = "./CHANGELOG.md"
-
 # Update dependencies
 dependencies_update = false
 
-# Don't create GitHub releases, only tags (let cargo-dist handle the actual release)
-git_release_enable = false
+# Changelog settings
+changelog_update = true
 
-# Still create git tags (which will trigger cargo-dist)
+# Release settings
+git_release_enable = true
 git_tag_enable = true
-
-# Use conventional commits for better changelog generation
-git_release_type = "auto"
-
-# Tag name format - this should match what cargo-dist expects
-git_tag_name = "v{{ version }}"
-
-# Disable draft releases so cargo-dist can handle the actual release
-git_release_draft = false
 
 # PR settings
 pr_name = "chore: release v{{ version }}"
