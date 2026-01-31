@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.3](https://github.com/paullj/dough/compare/v0.1.2...v0.1.3) - 2026-01-31
+
+### Added
+
+- initial commit
+
+### Fixed
+
+- release process pls
+- lint
+- release config
+- release ci
+- format
+- install instructions formatting in README
+- ci
+
+### Other
+
+- release v0.1.2 ([#2](https://github.com/paullj/dough/pull/2))
+
 ## [0.1.2](https://github.com/paullj/dough/compare/v0.1.1...v0.1.2) - 2026-01-31
 
 ### Fixed
