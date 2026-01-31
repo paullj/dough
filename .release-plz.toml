@@ -4,10 +4,8 @@
 [workspace]
 # Enable changelog generation
 changelog_update = true
-# Commit message when updating versions
-version_update_commit_message = "chore: release version {{version}}"
-# Tag prefix for git tags
-git_tag_prefix = "v"
+# Tag name template
+git_tag_name = "v{{version}}"
 # Enable automatic dependency updates in workspaces
 dependencies_update = true
 # Allow dirty working tree (useful for CI)

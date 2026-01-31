@@ -2,10 +2,12 @@ use chrono::Utc;
 use std::fs;
 use std::path::{Path, PathBuf};
 
+#[allow(dead_code)]
 pub struct BackupManager {
     backup_dir: PathBuf,
 }
 
+#[allow(dead_code)]
 impl BackupManager {
     pub fn new(backup_dir: PathBuf) -> Result<Self, std::io::Error> {
         fs::create_dir_all(&backup_dir)?;
@@ -169,6 +171,7 @@ impl BackupManager {
 }
 
 #[derive(Debug, Clone)]
+#[allow(dead_code)]
 pub struct BackupInfo {
     pub name: String,
     pub path: PathBuf,
@@ -176,6 +179,7 @@ pub struct BackupInfo {
     pub created: chrono::DateTime<Utc>,
 }
 
+#[allow(dead_code)]
 impl BackupInfo {
     pub fn size_mb(&self) -> f64 {
         self.size as f64 / (1024.0 * 1024.0)

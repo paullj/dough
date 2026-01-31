@@ -164,6 +164,7 @@ impl Repository {
             .collect())
     }
 
+    #[allow(dead_code)]
     pub async fn update_account_status(
         &self,
         public_id: &str,
