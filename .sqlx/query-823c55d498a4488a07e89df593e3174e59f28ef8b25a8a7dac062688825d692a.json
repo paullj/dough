@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "\n            UPDATE accounts\n            SET is_active = ?1\n            WHERE public_id = ?2\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": []
+  },
+  "hash": "823c55d498a4488a07e89df593e3174e59f28ef8b25a8a7dac062688825d692a"
+}

@@ -1,0 +1,53 @@
+[package]
+name = "dough"
+version = "0.1.0"
+edition = "2024"
+authors = ["Paul Lavender-Jones <paul@lavender-jones.com>"]
+description = "A personal finance CLI and TUI application"
+repository = "https://github.com/paullj/dough"
+homepage = "https://github.com/paullj/dough"
+license = "MIT"
+readme = "README.md"
+keywords = ["finance", "cli", "tui", "personal-finance"]
+categories = ["command-line-utilities"]
+
+[dependencies]
+clap = { version = "4.5.54", features = ["derive", "cargo", "string"] }
+crossterm = { version = "0.28.1", features = ["event-stream"] }
+futures = "0.3.31"
+ratatui = "0.29.0"
+tokio = { version = "1.40.0", features = ["full"] }
+color-eyre = "0.6.3"
+sqlx = { version = "0.8", features = [
+  "runtime-tokio",
+  "sqlite",
+  "chrono",
+  "migrate",
+] }
+chrono = { version = "0.4", features = ["serde"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+dirs = "5.0"
+inquire = "0.7"
+sqids = "0.4"
+rand = "0.8"
+tabled = "0.16"
+toml = "0.8"
+dotenv = "0.15"
+colored = "2.1"
+self_update = { version = "0.41", default-features = false, features = [
+  "archive-tar",
+  "archive-zip",
+  "compression-flate2",
+] }
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = "s"
+strip = true
+
+# The profile that 'dist' will build with
+[profile.dist]
+inherits = "release"
+lto = "thin"

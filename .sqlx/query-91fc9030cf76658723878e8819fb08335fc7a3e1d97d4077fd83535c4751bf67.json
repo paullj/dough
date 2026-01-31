@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "\n            UPDATE salaries\n            SET effective_date = ?1, amount_cents = ?2, currency = ?3, frequency = ?4, notes = ?5\n            WHERE id = ?6\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 6
+    },
+    "nullable": []
+  },
+  "hash": "91fc9030cf76658723878e8819fb08335fc7a3e1d97d4077fd83535c4751bf67"
+}

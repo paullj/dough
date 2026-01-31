@@ -1,0 +1,17 @@
+[application]
+# Default: USD
+default_currency = "GBP"
+
+[ui]
+# Default: YYYY-MM-DD
+date_format = "YYYY-MM-DD"
+
+[data]
+# Default: $HOME/.dough/data.db
+path = "sqlite://.dough/data/dough.db"
+
+[backups]
+# Default: $HOME/.dough/backups/
+directory = "./backups"
+# Default: "monthly", Options: "daily", "weekly", "monthly", "quarterly", "yearly"
+frequency = "quarterly"

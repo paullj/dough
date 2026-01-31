@@ -1,0 +1,20 @@
+{
+  "db_name": "SQLite",
+  "query": "\n                    SELECT COALESCE(SUM(amount_cents), 0) as total\n                    FROM account_entries\n                    WHERE account_id = ?1 AND entry_date <= ?2\n                    ",
+  "describe": {
+    "columns": [
+      {
+        "name": "total",
+        "ordinal": 0,
+        "type_info": "Integer"
+      }
+    ],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "21dd581efd4d798e5c4f6522638868982c8766a8fce47fc274b818e102a3706c"
+}

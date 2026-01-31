@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "\n            INSERT INTO salaries (effective_date, amount_cents, currency, frequency, notes)\n            VALUES (?1, ?2, ?3, ?4, ?5)\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 5
+    },
+    "nullable": []
+  },
+  "hash": "8b5ea5505253cdb31374a891eefbe7bbeb8800422671d15e4c95ac693a545e99"
+}

@@ -1,0 +1,23 @@
+# Release-plz configuration
+# https://release-plz.dev/docs/config
+
+[workspace]
+# Enable changelog generation
+changelog_update = true
+# Commit message when updating versions
+version_update_commit_message = "chore: release version {{version}}"
+# Tag prefix for git tags
+git_tag_prefix = "v"
+# Enable automatic dependency updates in workspaces
+dependencies_update = true
+# Allow dirty working tree (useful for CI)
+allow_dirty = false
+# Disable publishing to crates.io (we're only doing GitHub releases)
+publish = false
+# Changelog configuration
+changelog_config = "cliff.toml"
+
+[[package]]
+name = "dough"
+# Custom changelog path
+changelog_path = "CHANGELOG.md"

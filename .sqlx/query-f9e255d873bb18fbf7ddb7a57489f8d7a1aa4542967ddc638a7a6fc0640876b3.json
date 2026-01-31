@@ -1,0 +1,56 @@
+{
+  "db_name": "SQLite",
+  "query": "\n                    SELECT id as \"id!\", account_id, amount_cents, entry_date, description,\n                           created_at, updated_at\n                    FROM account_entries\n                    WHERE account_id = ?1\n                    ORDER BY entry_date DESC, created_at DESC\n                    ",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!",
+        "ordinal": 0,
+        "type_info": "Integer"
+      },
+      {
+        "name": "account_id",
+        "ordinal": 1,
+        "type_info": "Integer"
+      },
+      {
+        "name": "amount_cents",
+        "ordinal": 2,
+        "type_info": "Integer"
+      },
+      {
+        "name": "entry_date",
+        "ordinal": 3,
+        "type_info": "Date"
+      },
+      {
+        "name": "description",
+        "ordinal": 4,
+        "type_info": "Text"
+      },
+      {
+        "name": "created_at",
+        "ordinal": 5,
+        "type_info": "Datetime"
+      },
+      {
+        "name": "updated_at",
+        "ordinal": 6,
+        "type_info": "Datetime"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      true,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false
+    ]
+  },
+  "hash": "f9e255d873bb18fbf7ddb7a57489f8d7a1aa4542967ddc638a7a6fc0640876b3"
+}
