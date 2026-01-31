@@ -118,26 +118,23 @@ impl Config {
     /// 4. Default values
     pub fn load(cli_path: Option<&str>) -> color_eyre::Result<Self> {
         // Try CLI path first
-        if let Some(path) = cli_path {
-            if let Ok(config) = Self::load_from_path(path) {
+        if let Some(path) = cli_path
+            && let Ok(config) = Self::load_from_path(path) {
                 return Ok(config);
             }
-        }
 
         // Try environment variable
-        if let Ok(env_path) = std::env::var("DOUGH_CONFIG") {
-            if let Ok(config) = Self::load_from_path(&env_path) {
+        if let Ok(env_path) = std::env::var("DOUGH_CONFIG")
+            && let Ok(config) = Self::load_from_path(&env_path) {
                 return Ok(config);
             }
-        }
 
         // Try platform-specific user directories
         for path in Self::config_search_paths() {
-            if path.exists() {
-                if let Ok(config) = Self::load_from_path(path.to_str().unwrap()) {
+            if path.exists()
+                && let Ok(config) = Self::load_from_path(path.to_str().unwrap()) {
                     return Ok(config);
                 }
-            }
         }
 
         // Return defaults if no config found

@@ -386,6 +386,7 @@ impl Repository {
         }))
     }
 
+    #[allow(dead_code)]
     pub async fn list_account_entries(
         &self,
         account_id: i32,

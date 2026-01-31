@@ -78,7 +78,7 @@ pub async fn handle_command(
                 .unwrap_or_else(|| "No Provider".to_string());
             grouped
                 .entry(provider)
-                .or_insert_with(Vec::new)
+                .or_default()
                 .push(account);
         }
 
@@ -223,7 +223,7 @@ pub async fn handle_command(
                 account_id: account.id,
                 amount,
                 entry_date,
-                description: Some(format!("Daily balance log")),
+                description: Some("Daily balance log".to_string()),
             };
 
             repo.create_account_entry(entry).await?;

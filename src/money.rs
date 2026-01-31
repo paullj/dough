@@ -8,6 +8,7 @@ use std::fmt;
 pub struct Cents(pub i64);
 
 impl Cents {
+    #[allow(dead_code)]
     pub fn new(cents: i64) -> Self {
         Cents(cents)
     }
@@ -16,7 +17,7 @@ impl Cents {
         Cents((units * 100.0).round() as i64)
     }
 
-    pub fn to_major_units(&self) -> f64 {
+    pub fn to_major_units(self) -> f64 {
         self.0 as f64 / 100.0
     }
 

@@ -373,7 +373,7 @@ pub(crate) async fn handle_command(
                                         .notes
                                         .as_ref()
                                         .map(|n| format!(" - {}", n))
-                                        .unwrap_or_else(|| String::new());
+                                        .unwrap_or_else(String::new);
                                     format!(
                                         "#{}: {} - {} {}{}",
                                         s.id,

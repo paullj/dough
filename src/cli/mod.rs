@@ -51,7 +51,7 @@ enum Commands {
 fn parse_entry(s: &str) -> Result<(String, f64), String> {
     let parts: Vec<&str> = s.split('=').collect();
     if parts.len() != 2 {
-        return Err(format!("Invalid entry format. Use: account=amount"));
+        return Err("Invalid entry format. Use: account=amount".to_string());
     }
 
     let account = parts[0].to_string();
