@@ -13,6 +13,11 @@ jobs:
   release-plz:
     name: Release-plz
     runs-on: ubuntu-latest
+    # Skip if commit message contains "chore: release" or if it's from a release PR merge
+    if: |
+      !contains(github.event.head_commit.message, 'chore: release') &&
+      !contains(github.event.head_commit.message, 'chore(release)') &&
+      !startsWith(github.event.head_commit.message, 'chore: release v')
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

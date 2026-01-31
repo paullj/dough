@@ -7,8 +7,11 @@ changelog_path = "./CHANGELOG.md"
 # Update dependencies
 dependencies_update = false
 
-# Create GitHub releases (release-plz will create tags that trigger cargo-dist)
-git_release_enable = true
+# Don't create GitHub releases, only tags (let cargo-dist handle the actual release)
+git_release_enable = false
+
+# Still create git tags (which will trigger cargo-dist)
+git_tag_enable = true
 
 # Use conventional commits for better changelog generation
 git_release_type = "auto"
