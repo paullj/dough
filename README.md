@@ -11,9 +11,7 @@ A personal finance tracking cli and tui.
 ## install
 
 ```bash
-```
 curl -sSL https://raw.githubusercontent.com/paullj/dough/main/install.sh | sh
-```
 ```
 
 ### todo
