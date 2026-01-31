@@ -38,7 +38,7 @@ jobs:
         run: cargo clippy -- -D warnings
 
       - name: Check compilation
-        run: cargo check --all-features
+        run: SQLX_OFFLINE=true cargo check --all-features
 
   test:
     name: Test
@@ -61,14 +61,10 @@ jobs:
             target
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
-      - name: Setup test database
-        run: |
-          touch test.db
-          cargo sqlx database create
-          cargo sqlx migrate run
-
       - name: Run tests
-        run: cargo test --all-features
+        run: |
+          # Use offline mode for SQLx (using checked-in .sqlx folder)
+          SQLX_OFFLINE=true cargo test --all-features
 
   build:
     name: Build
@@ -92,7 +88,7 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
       - name: Build
-        run: cargo build --release
+        run: SQLX_OFFLINE=true cargo build --release
 
       - name: Verify binary
         run: |
