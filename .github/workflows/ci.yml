@@ -14,6 +14,8 @@ jobs:
   check:
     name: Check & Lint
     runs-on: ubuntu-latest
+    # Skip CI for release commits created by release-plz
+    if: "!contains(github.event.head_commit.message, 'chore: release') && !contains(github.event.head_commit.message, 'chore(release)')"
     steps:
       - uses: actions/checkout@v4
 
@@ -43,6 +45,8 @@ jobs:
   test:
     name: Test
     runs-on: ${{ matrix.os }}
+    # Skip CI for release commits created by release-plz
+    if: "!contains(github.event.head_commit.message, 'chore: release') && !contains(github.event.head_commit.message, 'chore(release)')"
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
@@ -69,6 +73,8 @@ jobs:
   build:
     name: Build
     runs-on: ${{ matrix.os }}
+    # Skip CI for release commits created by release-plz
+    if: "!contains(github.event.head_commit.message, 'chore: release') && !contains(github.event.head_commit.message, 'chore(release)')"
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
