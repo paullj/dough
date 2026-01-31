@@ -186,4 +186,3 @@ impl Config {
         paths
     }
 }
-

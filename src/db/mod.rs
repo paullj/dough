@@ -1,8 +1,8 @@
+pub mod backup;
 pub mod models;
 pub mod repository;
-pub mod backup;
 
-use sqlx::{sqlite::SqlitePoolOptions, SqlitePool};
+use sqlx::{SqlitePool, sqlite::SqlitePoolOptions};
 use std::path::Path;
 
 /// Initialize database connection pool
@@ -20,8 +20,9 @@ pub async fn init_pool(database_url: &str) -> Result<SqlitePool, sqlx::Error> {
     let pool = SqlitePoolOptions::new()
         .max_connections(5)
         .connect_with(
-            database_url.parse::<sqlx::sqlite::SqliteConnectOptions>()?
-                .create_if_missing(true)
+            database_url
+                .parse::<sqlx::sqlite::SqliteConnectOptions>()?
+                .create_if_missing(true),
         )
         .await?;
 

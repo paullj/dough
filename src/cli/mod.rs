@@ -55,7 +55,8 @@ fn parse_entry(s: &str) -> Result<(String, f64), String> {
     }
 
     let account = parts[0].to_string();
-    let amount = parts[1].parse::<f64>()
+    let amount = parts[1]
+        .parse::<f64>()
         .map_err(|_| format!("Invalid amount: {}", parts[1]))?;
 
     Ok((account, amount))
@@ -67,7 +68,10 @@ pub(crate) async fn run() -> color_eyre::Result<()> {
     // Check for updates on startup (non-blocking)
     tokio::spawn(async {
         if let Ok(Some(new_version)) = update::check_update().await {
-            eprintln!("Update available: v{} (run 'dough update' to upgrade)", new_version);
+            eprintln!(
+                "Update available: v{} (run 'dough update' to upgrade)",
+                new_version
+            );
         }
     });
 

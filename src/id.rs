@@ -32,7 +32,3 @@ mod tests {
         assert!(id3.len() >= 4);
     }
 }
-
-
-
-

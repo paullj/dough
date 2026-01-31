@@ -1,8 +1,8 @@
 use super::models::*;
-use crate::money::Cents;
 use crate::id::generate_public_id;
+use crate::money::Cents;
 use chrono::NaiveDate;
-use sqlx::{SqlitePool, Row};
+use sqlx::{Row, SqlitePool};
 
 pub struct Repository {
     pool: SqlitePool,
@@ -145,9 +145,7 @@ impl Repository {
              ORDER BY provider, name"
         };
 
-        let rows = sqlx::query(query)
-            .fetch_all(&self.pool)
-            .await?;
+        let rows = sqlx::query(query).fetch_all(&self.pool).await?;
 
         Ok(rows
             .iter()
@@ -166,7 +164,11 @@ impl Repository {
             .collect())
     }
 
-    pub async fn update_account_status(&self, public_id: &str, is_active: bool) -> Result<(), sqlx::Error> {
+    pub async fn update_account_status(
+        &self,
+        public_id: &str,
+        is_active: bool,
+    ) -> Result<(), sqlx::Error> {
         sqlx::query!(
             r#"
             UPDATE accounts
@@ -333,7 +335,10 @@ impl Repository {
 
     // ========== Account Entry Operations ==========
 
-    pub async fn create_account_entry(&self, entry: NewAccountEntry) -> Result<AccountEntry, sqlx::Error> {
+    pub async fn create_account_entry(
+        &self,
+        entry: NewAccountEntry,
+    ) -> Result<AccountEntry, sqlx::Error> {
         let amount_cents = entry.amount.0;
 
         let result = sqlx::query!(
@@ -353,7 +358,10 @@ impl Repository {
         self.get_account_entry_by_id(id).await.map(|e| e.unwrap())
     }
 
-    pub async fn get_account_entry_by_id(&self, id: i32) -> Result<Option<AccountEntry>, sqlx::Error> {
+    pub async fn get_account_entry_by_id(
+        &self,
+        id: i32,
+    ) -> Result<Option<AccountEntry>, sqlx::Error> {
         let row = sqlx::query!(
             r#"
             SELECT id as "id!", account_id, amount_cents, entry_date, description,
@@ -377,7 +385,11 @@ impl Repository {
         }))
     }
 
-    pub async fn list_account_entries(&self, account_id: i32, date: Option<NaiveDate>) -> Result<Vec<AccountEntry>, sqlx::Error> {
+    pub async fn list_account_entries(
+        &self,
+        account_id: i32,
+        date: Option<NaiveDate>,
+    ) -> Result<Vec<AccountEntry>, sqlx::Error> {
         match date {
             Some(date) => {
                 let rows = sqlx::query!(
@@ -437,7 +449,11 @@ impl Repository {
         }
     }
 
-    pub async fn get_account_balance(&self, account_id: i32, date: Option<NaiveDate>) -> Result<Cents, sqlx::Error> {
+    pub async fn get_account_balance(
+        &self,
+        account_id: i32,
+        date: Option<NaiveDate>,
+    ) -> Result<Cents, sqlx::Error> {
         // Get initial balance
         let initial = sqlx::query!(
             r#"

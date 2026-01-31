@@ -61,7 +61,10 @@ impl Type<Sqlite> for Cents {
 }
 
 impl<'q> Encode<'q, Sqlite> for Cents {
-    fn encode_by_ref(&self, buf: &mut <Sqlite as Database>::ArgumentBuffer<'q>) -> Result<sqlx::encode::IsNull, sqlx::error::BoxDynError> {
+    fn encode_by_ref(
+        &self,
+        buf: &mut <Sqlite as Database>::ArgumentBuffer<'q>,
+    ) -> Result<sqlx::encode::IsNull, sqlx::error::BoxDynError> {
         <i64 as Encode<'q, Sqlite>>::encode_by_ref(&self.0, buf)
     }
 }

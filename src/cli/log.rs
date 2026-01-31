@@ -1,12 +1,12 @@
 use crate::config::Config;
-use crate::db::models::{NewAccountEntry, Account};
+use crate::db::models::{Account, NewAccountEntry};
 use crate::db::repository::Repository;
 use crate::money::Cents;
 use chrono::{Local, NaiveDate};
-use color_eyre::eyre::{eyre, Result};
-use inquire::{Text, Confirm};
-use tabled::{Table, Tabled, settings::Style};
+use color_eyre::eyre::{Result, eyre};
 use colored::Colorize;
+use inquire::{Confirm, Text};
+use tabled::{Table, Tabled, settings::Style};
 
 #[derive(Tabled)]
 struct LogSummary {
@@ -45,7 +45,9 @@ pub async fn handle_command(
     let accounts = repo.list_accounts(true).await?;
 
     if accounts.is_empty() {
-        return Err(eyre!("No active accounts found. Please add accounts first using 'dough account add'"));
+        return Err(eyre!(
+            "No active accounts found. Please add accounts first using 'dough account add'"
+        ));
     }
 
     // Filter accounts that were active on the given date
@@ -67,10 +69,17 @@ pub async fn handle_command(
         println!();
 
         // Group accounts by provider
-        let mut grouped: std::collections::BTreeMap<String, Vec<&Account>> = std::collections::BTreeMap::new();
+        let mut grouped: std::collections::BTreeMap<String, Vec<&Account>> =
+            std::collections::BTreeMap::new();
         for account in &active_accounts {
-            let provider = account.provider.clone().unwrap_or_else(|| "No Provider".to_string());
-            grouped.entry(provider).or_insert_with(Vec::new).push(account);
+            let provider = account
+                .provider
+                .clone()
+                .unwrap_or_else(|| "No Provider".to_string());
+            grouped
+                .entry(provider)
+                .or_insert_with(Vec::new)
+                .push(account);
         }
 
         // Prompt for each group
@@ -81,7 +90,9 @@ pub async fn handle_command(
 
             for account in accts {
                 // Get current balance for reference
-                let current_balance = repo.get_account_balance(account.id, Some(entry_date)).await?;
+                let current_balance = repo
+                    .get_account_balance(account.id, Some(entry_date))
+                    .await?;
 
                 let prompt = format!(
                     "{} ({}): current calculated balance = {}",
@@ -95,7 +106,8 @@ pub async fn handle_command(
                     .prompt_skippable()?;
 
                 if let Some(amount_str) = input {
-                    let total_balance = amount_str.parse::<f64>()
+                    let total_balance = amount_str
+                        .parse::<f64>()
                         .map_err(|_| eyre!("Invalid amount: {}", amount_str))?;
 
                     // Calculate the difference needed to reach this total
@@ -103,7 +115,12 @@ pub async fn handle_command(
                     let difference = total_cents - current_balance;
 
                     if difference.0 != 0 {
-                        log_entries.push((account.clone(), current_balance, difference, total_cents));
+                        log_entries.push((
+                            account.clone(),
+                            current_balance,
+                            difference,
+                            total_cents,
+                        ));
                     }
                 }
             }
@@ -114,10 +131,18 @@ pub async fn handle_command(
             let account = active_accounts
                 .iter()
                 .find(|a| a.name.eq_ignore_ascii_case(account_name))
-                .ok_or_else(|| eyre!("Account '{}' not found or not active on {}", account_name, entry_date))?
+                .ok_or_else(|| {
+                    eyre!(
+                        "Account '{}' not found or not active on {}",
+                        account_name,
+                        entry_date
+                    )
+                })?
                 .clone();
 
-            let current_balance = repo.get_account_balance(account.id, Some(entry_date)).await?;
+            let current_balance = repo
+                .get_account_balance(account.id, Some(entry_date))
+                .await?;
             let total_balance = Cents::from_major_units(*amount);
             let difference = total_balance - current_balance;
 
@@ -179,9 +204,7 @@ pub async fn handle_command(
         })
         .collect();
 
-    let table = Table::new(&summary)
-        .with(Style::modern())
-        .to_string();
+    let table = Table::new(&summary).with(Style::modern()).to_string();
     println!("{}", table);
 
     // Confirm before saving

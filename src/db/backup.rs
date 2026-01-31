@@ -149,7 +149,11 @@ impl BackupManager {
     }
 
     /// Export backup to a different location
-    pub fn export_backup(&self, backup_name: &str, destination: &Path) -> Result<(), std::io::Error> {
+    pub fn export_backup(
+        &self,
+        backup_name: &str,
+        destination: &Path,
+    ) -> Result<(), std::io::Error> {
         let backup_path = self.backup_dir.join(backup_name);
 
         if !backup_path.exists() {

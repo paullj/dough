@@ -1,7 +1,7 @@
+use crate::money::Cents;
 use chrono::{DateTime, NaiveDate, Utc};
 use serde::{Deserialize, Serialize};
 use sqlx::FromRow;
-use crate::money::Cents;
 
 #[derive(Debug, Clone, Serialize, Deserialize, FromRow)]
 pub struct Account {

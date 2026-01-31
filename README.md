@@ -15,9 +15,6 @@ curl -sSL https://raw.githubusercontent.com/paullj/dough/main/install.sh | sh
 ```
 
 ### todo
-* way to install this with curl or without any other tools
-* auto update cli with github releases
-
 * export /import 
 
 * ISO currency support

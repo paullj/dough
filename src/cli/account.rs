@@ -1,7 +1,7 @@
-use clap::Subcommand;
-use inquire::{Text, Select, CustomType, Confirm};
 use crate::db::{models::*, repository::Repository};
 use crate::money::Cents;
+use clap::Subcommand;
+use inquire::{Confirm, CustomType, Select, Text};
 use tabled::{Table, Tabled, settings::Style};
 
 #[derive(Tabled)]
@@ -89,11 +89,9 @@ pub(crate) async fn handle_command(
             // Get account type interactively if not provided
             let account_type = match account_type {
                 Some(t) => t.clone(),
-                None => {
-                    Text::new("Account type/category (e.g., checking, savings, credit card):")
-                        .prompt()
-                        .map_err(|e| color_eyre::eyre::eyre!("Failed to get input: {}", e))?
-                }
+                None => Text::new("Account type/category (e.g., checking, savings, credit card):")
+                    .prompt()
+                    .map_err(|e| color_eyre::eyre::eyre!("Failed to get input: {}", e))?,
             };
 
             // Validate that account type is not empty
@@ -116,14 +114,12 @@ pub(crate) async fn handle_command(
             // Get initial balance interactively if not provided (optional field)
             let initial_balance = match initial_balance {
                 Some(b) => *b,
-                None => {
-                    CustomType::<f64>::new("Initial balance (press Enter for 0):")
-                        .with_default(0.0)
-                        .with_error_message("Please enter a valid number")
-                        .prompt_skippable()
-                        .map_err(|e| color_eyre::eyre::eyre!("Failed to get input: {}", e))?
-                        .unwrap_or(0.0)
-                }
+                None => CustomType::<f64>::new("Initial balance (press Enter for 0):")
+                    .with_default(0.0)
+                    .with_error_message("Please enter a valid number")
+                    .prompt_skippable()
+                    .map_err(|e| color_eyre::eyre::eyre!("Failed to get input: {}", e))?
+                    .unwrap_or(0.0),
             };
 
             // Get currency interactively if not provided (optional field)
@@ -131,11 +127,14 @@ pub(crate) async fn handle_command(
                 Some(c) => c.clone(),
                 None => {
                     let default_currency = config.application.default_currency.clone();
-                    Text::new(&format!("Currency code (press Enter for {}):", default_currency))
-                        .with_default(&default_currency)
-                        .prompt_skippable()
-                        .map_err(|e| color_eyre::eyre::eyre!("Failed to get input: {}", e))?
-                        .unwrap_or(default_currency)
+                    Text::new(&format!(
+                        "Currency code (press Enter for {}):",
+                        default_currency
+                    ))
+                    .with_default(&default_currency)
+                    .prompt_skippable()
+                    .map_err(|e| color_eyre::eyre::eyre!("Failed to get input: {}", e))?
+                    .unwrap_or(default_currency)
                 }
             };
 
@@ -149,10 +148,16 @@ pub(crate) async fn handle_command(
 
             match repo.create_account(new_account).await {
                 Ok(account) => {
-                    let currency_symbol = if account.currency == "GBP" { "£" } else { &account.currency };
-                    println!("✓ Added account '{}' with initial balance {}",
+                    let currency_symbol = if account.currency == "GBP" {
+                        "£"
+                    } else {
+                        &account.currency
+                    };
+                    println!(
+                        "✓ Added account '{}' with initial balance {}",
                         account.name,
-                        account.initial_balance.format_currency(currency_symbol));
+                        account.initial_balance.format_currency(currency_symbol)
+                    );
                 }
                 Err(e) => {
                     eprintln!("Failed to add account: {}", e);
@@ -170,29 +175,44 @@ pub(crate) async fn handle_command(
                         }
                     } else {
                         // Group accounts by provider
-                        let mut grouped: std::collections::BTreeMap<String, Vec<_>> = std::collections::BTreeMap::new();
+                        let mut grouped: std::collections::BTreeMap<String, Vec<_>> =
+                            std::collections::BTreeMap::new();
                         for account in accounts {
-                            let provider = account.provider.clone()
+                            let provider = account
+                                .provider
+                                .clone()
                                 .filter(|p| !p.trim().is_empty())
                                 .unwrap_or_else(|| "No Provider".to_string());
-                            grouped.entry(provider).or_insert_with(Vec::new).push(account);
+                            grouped
+                                .entry(provider)
+                                .or_insert_with(Vec::new)
+                                .push(account);
                         }
 
                         // Display grouped accounts
                         for (provider, accts) in grouped {
-                            println!("\n{}", if provider == "No Provider" {
-                                "No Provider".to_string()
-                            } else {
-                                format!("Provider: {}", provider)
-                            });
+                            println!(
+                                "\n{}",
+                                if provider == "No Provider" {
+                                    "No Provider".to_string()
+                                } else {
+                                    format!("Provider: {}", provider)
+                                }
+                            );
                             println!("{}", "-".repeat(60));
 
                             let mut display_accounts = Vec::new();
                             for account in accts {
-                                let currency_symbol = if account.currency == "GBP" { "£" } else { &account.currency };
+                                let currency_symbol = if account.currency == "GBP" {
+                                    "£"
+                                } else {
+                                    &account.currency
+                                };
 
                                 // Get actual balance including entries
-                                let balance = repo.get_account_balance(account.id, None).await
+                                let balance = repo
+                                    .get_account_balance(account.id, None)
+                                    .await
                                     .unwrap_or(account.initial_balance);
 
                                 display_accounts.push(AccountDisplay {
@@ -222,25 +242,36 @@ pub(crate) async fn handle_command(
                     // First, list available accounts for user to choose from
                     match repo.list_accounts(false).await {
                         Ok(accounts) if !accounts.is_empty() => {
-                            let account_names: Vec<String> = accounts.iter()
-                                .map(|a| format!("{} ({} - {})",
-                                    a.name,
-                                    a.account_type,
-                                    a.initial_balance.format_currency(
-                                        if a.currency == "GBP" { "£" } else { &a.currency }
+                            let account_names: Vec<String> = accounts
+                                .iter()
+                                .map(|a| {
+                                    format!(
+                                        "{} ({} - {})",
+                                        a.name,
+                                        a.account_type,
+                                        a.initial_balance.format_currency(if a.currency == "GBP" {
+                                            "£"
+                                        } else {
+                                            &a.currency
+                                        })
                                     )
-                                ))
+                                })
                                 .collect();
 
                             let selected = Select::new("Select account to remove:", account_names)
                                 .prompt()
-                                .map_err(|e| color_eyre::eyre::eyre!("Failed to get input: {}", e))?;
+                                .map_err(|e| {
+                                    color_eyre::eyre::eyre!("Failed to get input: {}", e)
+                                })?;
 
                             // Extract just the account name from the selected string
-                            accounts.iter()
+                            accounts
+                                .iter()
                                 .find(|a| selected.starts_with(&a.name))
                                 .map(|a| a.name.clone())
-                                .unwrap_or_else(|| selected.split(" (").next().unwrap_or("").to_string())
+                                .unwrap_or_else(|| {
+                                    selected.split(" (").next().unwrap_or("").to_string()
+                                })
                         }
                         Ok(_) => {
                             eprintln!("No accounts found.");
@@ -257,10 +288,13 @@ pub(crate) async fn handle_command(
             match repo.get_account_by_name(&name).await {
                 Ok(Some(account)) => {
                     if !force {
-                        let confirmed = Confirm::new(&format!("Are you sure you want to delete account '{}'?", name))
-                            .with_default(false)
-                            .prompt()
-                            .map_err(|e| color_eyre::eyre::eyre!("Failed to get input: {}", e))?;
+                        let confirmed = Confirm::new(&format!(
+                            "Are you sure you want to delete account '{}'?",
+                            name
+                        ))
+                        .with_default(false)
+                        .prompt()
+                        .map_err(|e| color_eyre::eyre::eyre!("Failed to get input: {}", e))?;
 
                         if !confirmed {
                             println!("Cancelled.");
@@ -286,10 +320,13 @@ pub(crate) async fn handle_command(
             match repo.get_account(id).await {
                 Ok(Some(account)) => {
                     if !force {
-                        let confirmed = Confirm::new(&format!("Are you sure you want to delete account '{}' (ID: {})?", account.name, id))
-                            .with_default(false)
-                            .prompt()
-                            .map_err(|e| color_eyre::eyre::eyre!("Failed to get input: {}", e))?;
+                        let confirmed = Confirm::new(&format!(
+                            "Are you sure you want to delete account '{}' (ID: {})?",
+                            account.name, id
+                        ))
+                        .with_default(false)
+                        .prompt()
+                        .map_err(|e| color_eyre::eyre::eyre!("Failed to get input: {}", e))?;
 
                         if !confirmed {
                             println!("Cancelled.");
@@ -314,4 +351,3 @@ pub(crate) async fn handle_command(
 
     Ok(())
 }
-
